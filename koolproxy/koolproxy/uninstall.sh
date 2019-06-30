@@ -4,6 +4,7 @@ sh /jffs/softcenter/koolproxy/koolproxy.sh stop
 rm -rf /jffs/softcenter/bin/koolproxy >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/koolproxy >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/kp_config.sh >/dev/null 2>&1
+rm -rf /jffs/softcenter/koolproxy/kp_rules.sh >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/koolproxy.sh >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/nat_load.sh >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/rule_store >/dev/null 2>&1
@@ -16,6 +17,10 @@ rm -rf /jffs/softcenter/koolproxy/data/gen_ca.sh >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/data/openssl.cnf >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/data/serial >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/data/version >/dev/null 2>&1
+
+rm -rf /jffs/softcenter/scripts/koolproxy_config.sh >/dev/null 2>&1
+rm -rf /jffs/softcenter/scripts/koolproxy_status.sh >/dev/null 2>&1
+rm -rf /jffs/softcenter/scripts/kpr_update_rules.sh >/dev/null 2>&1
 
 rm -rf /jffs/softcenter/res/koolproxy_check.htm
 rm -rf /jffs/softcenter/res/koolproxy_run.htm

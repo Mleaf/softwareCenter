@@ -22,6 +22,25 @@
 <script type="text/javascript" src="/client_function.js"></script>
 <script type="text/javascript" src="/help.js"></script>
 <style>
+.ss_btn {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+.ss_btn:hover {
+	border: 1px solid #222;
+	background: linear-gradient(to bottom, #27c9c9  0%, #279fd9 100%); /* W3C */
+	font-size:10pt;
+	color: #fff;
+	padding: 5px 5px;
+	border-radius: 5px 5px 5px 5px;
+	width:14%;
+}
+
 .kp_btn {
 	border: 1px solid #222;
 	background: linear-gradient(to bottom, #003333  0%, #000000 100%); /* W3C */
@@ -272,6 +291,123 @@ function init() {
 	show_menu(menu_hook);
 	get_dbus_data();
 }
+
+function version_show() {
+	var db_kp={};
+	db_kp["koolproxy_version"] = dbus["koolproxy_version"];
+	if (!db_kp["koolproxy_version"]){
+		E("enable_koolproxyR_switch").style = "display:table-cell;pointer-events:none;";
+	}
+	$.ajax({
+		url: 'https://raw.githubusercontent.com/Mleaf/softwareCenter/master/koolproxy/config.json.js',
+		type: 'GET',
+		dataType: 'json',
+		success: function(res) {
+			console.log(db_kp["koolproxy_version"])
+			if (typeof(res["version"]) != "undefined" && res["version"].length > 0) {
+				if (res["version"] == db_kp["koolproxy_version"]) {
+					$("#kpr_version_show").html("<a class='hintstyle' href='javascript:void(12);' onclick='openssHint(12)'><i>当前版本：" + db_kp['koolproxy_version'] + "</i></a>");
+				} else if (res["version"] != db_kp["koolproxy_version"]) {
+					if (typeof(db_kp["koolproxy_version"]) != "undefined") {
+						$("#kpr_version_show").html("<a class='hintstyle' href='javascript:void(12);' onclick='openssHint(12)'><i>当前版本：" + db_kp['koolproxy_version'] + "</i></a>");
+						$("#updateBtn").html("<i>升级到：" + res.version + "</i>");
+					} else if (!db_kp["koolproxy_version"] && res["version"]) {
+						$("#kpr_version_show").html("<a class='hintstyle' href='javascript:void(12);' onclick='openssHint(12)'><i>当前版本：未安装</i></a>");
+						$("#updateBtn").html("<i>安装：" + res.version + "</i>");
+					}else {
+						$("#kpr_version_show").html("<a class='hintstyle' href='javascript:void(12);' onclick='openssHint(12)'><i>当前版本：未知</i></a>");
+					}
+				}
+			}
+		}
+	});
+}
+
+function get_realtime_log() {
+	$.ajax({
+		url: '/cmdRet_check.htm',
+		dataType: 'html',
+		error: function(xhr) {
+			setTimeout("get_realtime_log();", 1000);
+		},
+		success: function(response) {
+			var retArea = E("log_content3");
+			if (response.search("XU6J03M6") != -1) {
+				retArea.value = response.replace("XU6J03M6", " ");
+				E("ok_button").style.display = "";
+				retArea.scrollTop = retArea.scrollHeight;
+				x = 5;
+				count_down_close();
+				return true;
+			} else {
+				E("ok_button").style.display = "none";
+			}
+			if (_responseLen == response.length) {
+				noChange++;
+			} else {
+				noChange = 0;
+			}
+			if (noChange > 1000) {
+				return false;
+			} else {
+				setTimeout("get_realtime_log();", 250);
+			}
+			retArea.value = response.replace("XU6J03M6", " ");
+			retArea.scrollTop = retArea.scrollHeight;
+			_responseLen = response.length;
+		},
+		error: function() {
+			setTimeout("get_realtime_log();", 500);
+		}
+	});
+}
+
+function push_data_kpr_log(obj) {
+	$.ajax({
+		type: "POST",
+		url: '/applydb.cgi?p=ss',
+		contentType: "application/x-www-form-urlencoded",
+		dataType: 'text',
+		data: $.param(obj),
+		success: function(response) {
+			showKPLoadingBar();
+			noChange2 = 0;
+			setTimeout("get_log();", 500);
+		}
+	});
+}
+
+function push_data_realtime_log(obj) {
+	$.ajax({
+		type: "POST",
+		url: '/applydb.cgi?p=ss',
+		contentType: "application/x-www-form-urlencoded",
+		dataType: 'text',
+		data: $.param(obj),
+		success: function(response) {
+			showKPLoadingBar();
+			noChange2 = 0;
+			setTimeout("get_realtime_log();", 500);
+		}
+	});
+}
+
+function update_kpr() {
+	var dbus = {};
+	dbus["action_script"] = "kpr_update.sh";
+	dbus["action_mode"] = " Refresh ";
+	dbus["current_page"] = "Module_koolproxy.asp";
+	push_data_realtime_log(dbus);
+}
+
+function update_kpr_rules() {
+	var dbus = {};
+	dbus["action_script"] = "kpr_update_rules.sh";
+	dbus["action_mode"] = " Refresh ";
+	dbus["current_page"] = "Module_koolproxy.asp";
+	push_data_kpr_log(dbus);
+}
+
 function get_dbus_data(){
 	$.ajax({
 	  	type: "GET",
@@ -289,6 +425,7 @@ function get_dbus_data(){
 			update_visibility();
 			get_user_rule();
 			hook_event();
+			version_show();
 			showDropdownClientList('setClientIP', 'ip', 'all', 'ClientList_Block', 'pull_arrow', 'online');
 		}
 	});
@@ -309,6 +446,7 @@ function hook_event(){
 			E("policy_tr").style.display = "";
 			E("kp_status").style.display = "";
 			E("auto_reboot_switch").style.display = "";
+			E("auto_update_rules").style.display = "";
 			E("rule_table_div").style.display = "";
 			E("cert_download_tr").style.display = "";
 			E("acl_method_tr").style.display = "";
@@ -319,6 +457,7 @@ function hook_event(){
 			E("policy_tr").style.display = "none";
 			E("kp_status").style.display = "none";
 			E("auto_reboot_switch").style.display = "none";
+			E("auto_update_rules").style.display = "none";
 			E("rule_table_div").style.display = "none";
 			E("cert_download_tr").style.display = "none";
 			E("acl_method_tr").style.display = "none";
@@ -333,12 +472,22 @@ function generate_options(){
 		$("#koolproxy_reboot_hour").val(3);
 		$("#koolproxy_reboot_inter_hour").append("<option value='"  + i + "'>" + i + "时</option>");
 		$("#koolproxy_reboot_inter_hour").val(12);
+		
+		$("#koolproxy_rules_hour").append("<option value='"  + i + "'>" + i + "点</option>");
+		$("#koolproxy_rules_hour").val(3);
+		$("#koolproxy_rules_inter_hour").append("<option value='"  + i + "'>" + i + "时</option>");
+		$("#koolproxy_rules_inter_hour").val(12);
 	}
 	for(var i = 0; i < 60; i++) {
 		$("#koolproxy_reboot_min").append("<option value='"  + i + "'>" + i + "分</option>");
 		$("#koolproxy_reboot_inter_min").append("<option value='"  + i + "'>" + i + "分</option>");
 		$("#koolproxy_reboot_min").val(30);
 		$("#koolproxy_reboot_inter_min").val(0);
+		
+		$("#koolproxy_rules_min").append("<option value='"  + i + "'>" + i + "分</option>");
+		$("#koolproxy_rules_inter_min").append("<option value='"  + i + "'>" + i + "分</option>");
+		$("#koolproxy_rules_min").val(30);
+		$("#koolproxy_rules_inter_min").val(0);
 	}
 }
 function get_run_status(){
@@ -402,7 +551,8 @@ function menu_hook(title, tab) {
 function conf2obj(){
 	var params = ["koolproxy_mode", "koolproxy_reboot", "koolproxy_reboot_hour", "koolproxy_reboot_min", "koolproxy_reboot_inter_hour", "koolproxy_reboot_inter_min", "koolproxy_acl_method"];
 	var params_chk = ["koolproxy_enable", "koolproxy_rule_enable_d1", "koolproxy_rule_enable_d2", "koolproxy_rule_enable_d3"];
-	for (var i = 0; i < params.length; i++) {
+	var params_rules = ["koolproxy_rules", "koolproxy_rules_hour", "koolproxy_rules_min", "koolproxy_rules_inter_hour", "koolproxy_rules_inter_min"];
+	for (var i = 0; i < params_chk.length; i++) {
 		if(dbus[params_chk[i]]){
 			E(params_chk[i]).checked = dbus[params_chk[i]] == "1";
 		}
@@ -410,6 +560,12 @@ function conf2obj(){
 	for (var i = 0; i < params.length; i++) {
 		if(dbus[params[i]]){
 			E(params[i]).value = dbus[params[i]];
+		}
+	}
+	
+	for (var i = 0; i < params_rules.length; i++) {
+		if(dbus[params_rules[i]]){
+			E(params_rules[i]).value = dbus[params_rules[i]];
 		}
 	}
 }
@@ -421,6 +577,7 @@ function update_visibility(r){
 		E("policy_tr").style.display = "";
 		E("kp_status").style.display = "";
 		E("auto_reboot_switch").style.display = "";
+		E("auto_update_rules").style.display = "";
 		E("rule_table_div").style.display = "";
 		E("cert_download_tr").style.display = "";
 		E("acl_method_tr").style.display = "";
@@ -430,6 +587,7 @@ function update_visibility(r){
 		E("policy_tr").style.display = "none";
 		E("kp_status").style.display = "none";
 		E("auto_reboot_switch").style.display = "none";
+		E("auto_update_rules").style.display = "none";
 		E("rule_table_div").style.display = "none";
 		E("cert_download_tr").style.display = "none";
 		E("acl_method_tr").style.display = "none";
@@ -438,6 +596,10 @@ function update_visibility(r){
 	}
 	showhide("koolproxy_reboot_hour_span", (E("koolproxy_reboot").value == 1));
 	showhide("koolproxy_reboot_interval_span", (E("koolproxy_reboot").value == 2));
+	
+	showhide("koolproxy_rules_hour_span", (E("koolproxy_rules").value == 1));
+	showhide("koolproxy_rules_interval_span", (E("koolproxy_rules").value == 2));
+	
 	var maxrule = parseInt($("#rule_table > tbody > tr:eq(-2) > td:nth-child(1) > input").attr("id").split("_")[3]);
 	if($(r).attr("id") == "koolproxy_mode"){
 		if(E("koolproxy_mode").value == 3){
@@ -1061,11 +1223,15 @@ function save(){
 	// collect basic data
 	var params = ["koolproxy_mode", "koolproxy_reboot", "koolproxy_reboot_hour", "koolproxy_reboot_min", "koolproxy_reboot_inter_hour", "koolproxy_reboot_inter_min", "koolproxy_acl_method", "koolproxy_acl_default_mode"];
 	var params_chk = ["koolproxy_enable", "koolproxy_rule_enable_d1", "koolproxy_rule_enable_d2", "koolproxy_rule_enable_d3"];
+	var params_rules = ["koolproxy_rules", "koolproxy_rules_hour", "koolproxy_rules_min", "koolproxy_rules_inter_hour", "koolproxy_rules_inter_min"];
 	for (var i = 0; i < params.length; i++) {
 		dbus[params[i]] = E(params[i]).value;
 	}
 	for (var i = 0; i < params_chk.length; i++) {
 		dbus[params_chk[i]] = E(params_chk[i]).checked ? "1" : "0";
+	}
+	for (var i = 0; i < params_rules.length; i++) {
+		dbus[params_rules[i]] = E(params_rules[i]).value;
 	}
 	// collect value in user rule textarea
 	//dbus["koolproxy_custom_rule"] = Base64.encode(E("usertxt").value);
@@ -1284,7 +1450,7 @@ function openkpHint(itemNum) {
 														<label>开启koolproxyR</label>
 													</th>
 													<td colspan="2">
-														<div class="switch_field" style="display:table-cell">
+														<div id="enable_koolproxyR_switch" class="switch_field" style="display:table-cell;pointer-events:;">
 															<label for="koolproxy_enable">
 																<input id="koolproxy_enable" class="switch" type="checkbox" style="display: none;">
 																<div class="switch_container" >
@@ -1295,10 +1461,22 @@ function openkpHint(itemNum) {
 																</div>
 															</label>
 														</div>
-														<div style="display:table-cell;float: left;margin-left:270px;margin-top:-32px;position: absolute;padding: 5.5px 0px;">
+														<div id="update_button" style="display:table-cell;float: left;margin-top:-30px;position: absolute;margin-left:70px;padding: 5.5px 0px;">
+															<a id="updateBtn" type="button" class="ss_btn" style="cursor:pointer" onclick="update_kpr()">检查并更新</a>
+														</div>
+														<div id="kpr_version_show" style="display:table-cell;float: left;margin-top:-30px;position: absolute;margin-left:170px;padding: 5.5px 0px;">
+															<a class="hintstyle" href="javascript:void(0);">
+																<i>当前版本：<% dbus_get_def("koolproxy_version", "未知"); %></i>
+															</a>
+														</div>
+														<div style="display:table-cell;float: left;margin-left:270px;margin-top:-30px;position: absolute;padding: 5.5px 0px;">
 															<a type="button" class="kp_btn" target="_blank" href="https://github.com/koolproxy/merlin-koolproxy/blob/master/Changelog.txt">更新日志</a>
 														</div>
+
 													</td>
+												</tr>
+												<tr id="kp_install">
+				
 												</tr>
 												<tr id="kp_status">
 													<th>koolproxyR运行状态</th>
@@ -1339,7 +1517,37 @@ function openkpHint(itemNum) {
 															</select>
 															<select id="koolproxy_reboot_inter_min" name="koolproxy_reboot_inter_min" class="ssconfig input_option" >
 															</select>
-															重启koolproxy
+															重启
+															&nbsp;&nbsp;&nbsp;&nbsp;
+														</span>
+													</td>
+												</tr>
+												<tr id="auto_update_rules">
+													<th>定时更新规则</th>
+													<td>
+														<select name="koolproxy_rules" id="koolproxy_rules" class="input_option" style="width:auto;margin:0px 0px 0px 2px;" onchange="update_visibility();">
+															<option value="1">定时</option>
+															<option value="2">间隔</option>
+															<option value="0" selected>关闭</option>
+														</select>
+														<span id="koolproxy_rules_hour_span">
+															&nbsp;&nbsp;&nbsp;&nbsp;
+															每天
+															<select id="koolproxy_rules_hour" name="koolproxy_rules_hour" class="ssconfig input_option" >
+															</select>
+															<select id="koolproxy_rules_min" name="koolproxy_rules_min" class="ssconfig input_option" >
+															</select>
+															更新规则
+															&nbsp;&nbsp;&nbsp;&nbsp;
+														</span>
+														<span id="koolproxy_rules_interval_span">
+															&nbsp;&nbsp;&nbsp;&nbsp;
+															每隔
+															<select id="koolproxy_rules_inter_hour" name="koolproxy_rules_inter_hour" class="ssconfig input_option" >
+															</select>
+															<select id="koolproxy_rules_inter_min" name="koolproxy_rules_inter_min" class="ssconfig input_option" >
+															</select>
+															更新规则
 															&nbsp;&nbsp;&nbsp;&nbsp;
 														</span>
 													</td>
@@ -1359,6 +1567,7 @@ function openkpHint(itemNum) {
 													<td>
 														<input class="button_gen" onclick="location.href='http://110.110.110.110'" type="button" value="下载证书" name="mycert" />
 														<a class="kp_btn" href="http://koolshare.cn/thread-80430-1-1.html" target="_blank">https过滤使用教程</a>
+														<input class="button_gen" onclick="update_kpr_rules()" type="button" value="手动更新规则"/>
 													</td>
 												</tr>
                                     		</table>

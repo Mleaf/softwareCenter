@@ -126,6 +126,17 @@ write_reboot_job(){
 	fi
 }
 
+write_rules_job(){
+	# start setvice
+	if [ "1" == "$koolproxy_rules" ]; then
+		echo_date 开启插件定时更新规则，每天"$koolproxy_rules_hour"时"$koolproxy_rules_min"分，自动更新规则...
+		cru a koolproxy_rules "$koolproxy_rules_min $koolproxy_rules_hour * * * /bin/sh $KP_DIR/kp_rules.sh"
+	elif [ "2" == "$koolproxy_rules" ]; then
+		echo_date 开启插件间隔更新规则，每隔"$koolproxy_rules_inter_hour"时"$koolproxy_rules_inter_min"分，自动更新规则...
+		cru a koolproxy_rules "*/$koolproxy_rules_inter_min */$koolproxy_rules_inter_hour * * * /bin/sh $KP_DIR/kp_rules.sh"
+	fi
+}
+
 remove_reboot_job(){
 	jobexist=`cru l|grep koolproxy_reboot`
 	# kill crontab job
@@ -315,6 +326,7 @@ start)
 		dns_takeover
 		write_nat_start
 		write_reboot_job
+		write_rules_job
 		creat_start_up
 	else
 		logger "[软件中心]: koolproxy插件未开启，不启动！"
@@ -342,6 +354,7 @@ restart)
 	dns_takeover
 	write_nat_start
 	write_reboot_job
+	write_rules_job
 	creat_start_up
 	echo_date koolproxy启用成功，请等待日志窗口自动关闭，页面会自动刷新...
 	echo_date =====================================================================
@@ -383,6 +396,7 @@ stop_nat)
 		dns_takeover
 		write_nat_start
 		write_reboot_job
+		write_rules_job
 		creat_start_up
 	fi
 	unset_lock

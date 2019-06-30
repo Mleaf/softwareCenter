@@ -8,7 +8,7 @@ eval `dbus export koolproxy`
 rm -rf /jffs/softcenter/bin/koolproxy >/dev/null 2>&1
 rm -rf /jffs/softcenter/init.d/*koolproxy.sh
 rm -rf /jffs/softcenter/scripts/koolproxy*
-# rm -rf /jffs/softcenter/webs/Module_koolproxy.asp
+rm -rf /jffs/softcenter/webs/Module_koolproxy.asp
 rm -rf /jffs/softcenter/koolproxy/*.sh >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/koolproxy >/dev/null 2>&1
 rm -rf /jffs/softcenter/koolproxy/data/*.sh >/dev/null 2>&1
@@ -49,8 +49,8 @@ rm -rf /tmp/koolproxy* >/dev/null 2>&1
 [ -z "$koolproxy_policy" ] && dbus set koolproxy_policy=1
 [ -z "$koolproxy_acl_default_mode" ] && dbus set koolproxy_acl_default_mode=1
 dbus set softcenter_module_koolproxy_install=1
-dbus set softcenter_module_koolproxy_version=3.8.4
-dbus set koolproxy_version=3.8.4
+dbus set softcenter_module_koolproxy_version=3.8.5
+dbus set koolproxy_version=3.8.5
 
 
 [ "$koolproxy_enable" == "1" ] && sh /jffs/softcenter/koolproxy/kp_config.sh restart
