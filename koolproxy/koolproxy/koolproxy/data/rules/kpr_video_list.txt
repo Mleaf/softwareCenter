@@ -23,7 +23,7 @@
 ||http://hudong.pl.youku.com/n/interact/player/get/plugins?
 ||http://k.youku.com/player/getFlvPath/sid/*&vl=
 ||http://sealine.youku.com/yk/html?
-||http://vali*.cibntv.net^*.mp4?$rewrite=abp-resource:blank-mp3,domain=youku.com
+||http://vali*.cibntv.net^*.mp4?$media,rewrite=abp-resource:blank-mp3,domain=youku.com
 ||http://youku.com/cms/tool/pub/get_putdata.
 ||http://youku.com/dress/
 ||http://youku.com/QVideo/~ajax/getDefaultItem?
@@ -37,7 +37,7 @@ https://youku.com###relationvideo_async > .items > .v-horiz:nth-child(-n+2)
 https://youku.com###seebuyGuide
 https://youku.com###seebuyhome
 https://youku.com##.yk-AD-tong
-https://52movieba.com,acg18.life,acgbuster.net,ainuody.com,awaker.cn,cangku.in,ccav1.com,cdsoso.me,cgown.com,cn163.net,cosersuki.org,dm1080p.com,epinv.com,eroacg.com,galacg.me,gmgard.com,halihali.me,haochi123.com,hcomic.in,hexieshe.com,hexieshe.xyz,hggard.com,hmghmg.com,hmog.me,htcui.com,huan.moe,idanmu.at,jiecao123.com,jitapu.com,jobbole.com,kisssub.org,languang.co,liuli.pw,moe-acg.cc,moe-acg.us,mydrivers.com,nxing.cn,oyksoft.com,rijutv.com,souxue8.com,speedtest.cn,toutiao.com,tucao.one,uraban.me,vpansou.com,xxshe.info,xxshe.xyz,youku.com,zimuzu.tv##a[href*=".taobao.com"]
+https://52movieba.com,acg18.life,acgbuster.net,ainuody.com,awaker.cn,cangku.in,ccav1.com,cdsoso.me,cgown.com,cn163.net,cosersuki.org,dm1080p.com,epinv.com,eroacg.com,galacg.me,gmgard.com,halihali.me,haochi123.com,hcomic.in,hexieshe.cn,hexieshe.com,hexieshe.xyz,hggard.com,hmghmg.com,hmog.me,htcui.com,huan.moe,idanmu.at,jiecao123.com,jitapu.com,jobbole.com,kisssub.org,languang.co,liuli.pw,moe-acg.cc,moe-acg.us,mydrivers.com,nxing.cn,oyksoft.com,rijutv.com,souxue8.com,speedtest.cn,toutiao.com,tucao.one,uraban.me,vpansou.com,xxshe.info,xxshe.xyz,youku.com,zimuzu.tv##a[href*=".taobao.com"]
 https://acgdoge.net,douyu.com,gmgard.com,hggard.com,iqiyi.com,youku.com##a[href*=".tmall.com"]
 https://youku.com##div[style="position:relative;"]:first-child > a[style*="z-index:5; display:block;"]
 https://youku.com###bt-banner
@@ -57,7 +57,7 @@ http://youku.com###relationvideo_async > .items > .v-horiz:nth-child(-n+2)
 http://youku.com###seebuyGuide
 http://youku.com###seebuyhome
 http://youku.com##.yk-AD-tong
-http://52movieba.com,acg18.life,acgbuster.net,ainuody.com,awaker.cn,cangku.in,ccav1.com,cdsoso.me,cgown.com,cn163.net,cosersuki.org,dm1080p.com,epinv.com,eroacg.com,galacg.me,gmgard.com,halihali.me,haochi123.com,hcomic.in,hexieshe.com,hexieshe.xyz,hggard.com,hmghmg.com,hmog.me,htcui.com,huan.moe,idanmu.at,jiecao123.com,jitapu.com,jobbole.com,kisssub.org,languang.co,liuli.pw,moe-acg.cc,moe-acg.us,mydrivers.com,nxing.cn,oyksoft.com,rijutv.com,souxue8.com,speedtest.cn,toutiao.com,tucao.one,uraban.me,vpansou.com,xxshe.info,xxshe.xyz,youku.com,zimuzu.tv##a[href*=".taobao.com"]
+http://52movieba.com,acg18.life,acgbuster.net,ainuody.com,awaker.cn,cangku.in,ccav1.com,cdsoso.me,cgown.com,cn163.net,cosersuki.org,dm1080p.com,epinv.com,eroacg.com,galacg.me,gmgard.com,halihali.me,haochi123.com,hcomic.in,hexieshe.cn,hexieshe.com,hexieshe.xyz,hggard.com,hmghmg.com,hmog.me,htcui.com,huan.moe,idanmu.at,jiecao123.com,jitapu.com,jobbole.com,kisssub.org,languang.co,liuli.pw,moe-acg.cc,moe-acg.us,mydrivers.com,nxing.cn,oyksoft.com,rijutv.com,souxue8.com,speedtest.cn,toutiao.com,tucao.one,uraban.me,vpansou.com,xxshe.info,xxshe.xyz,youku.com,zimuzu.tv##a[href*=".taobao.com"]
 http://acgdoge.net,douyu.com,gmgard.com,hggard.com,iqiyi.com,youku.com##a[href*=".tmall.com"]
 http://youku.com##div[style="position:relative;"]:first-child > a[style*="z-index:5; display:block;"]
 http://youku.com###bt-banner
@@ -72,6 +72,7 @@ http://youku.com##.pop-prompt-box
 http://m.youku.com##.recommend
 @@@@https://data.video.iqiyi.com
 @@@@https://cupid.iqiyi.com
+|https://static.iqiyi.com/js/player_v2
 @@@@||https://cupid.iqiyi.com^
 ||https://iqiyi.com/track$popup
 ||https://info.vip.iqiyi.com/promotion/

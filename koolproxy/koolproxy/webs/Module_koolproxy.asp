@@ -397,7 +397,7 @@ function update_kpr() {
 	dbus["action_script"] = "kpr_update.sh";
 	dbus["action_mode"] = " Refresh ";
 	dbus["current_page"] = "Module_koolproxy.asp";
-	push_data_realtime_log(dbus);
+	push_data_kpr_log(dbus);
 }
 
 function update_kpr_rules() {
@@ -1590,7 +1590,7 @@ function openkpHint(itemNum) {
 												</tr>
 												<tr>
 													<td style="text-align:center;">
-														<input type="checkbox" id="koolproxy_rule_enable_d1" checked="checked" name="koolproxy_rule_enable_d1" />
+														<input type="checkbox" id="koolproxy_rule_enable_d1" name="koolproxy_rule_enable_d1" />
 													</td>
 													<td>
 														koolproxy.txt
@@ -1610,7 +1610,7 @@ function openkpHint(itemNum) {
 												</tr>
 												<tr>
 													<td style="text-align:center;">
-														<input type="checkbox" id="koolproxy_rule_enable_d2" checked="checked" name="koolproxy_rule_enable_d2" />
+														<input type="checkbox" id="koolproxy_rule_enable_d2" name="koolproxy_rule_enable_d2" />
 													</td>
 													<td>
 														daily.txt
